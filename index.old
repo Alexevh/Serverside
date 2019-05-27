@@ -1,0 +1,48 @@
+<?php
+
+
+<?php
+ini_set("display_errors", 1);
+
+require_once './constantes.php';
+require_once './autoload.php';
+
+$domain = $_SERVER['SERVER_NAME']; 
+
+/* Me fijo a que llamaron al index.php*/
+if (strpos($domain, "api") || strpos($domain, "api")===0)
+{
+  /* Me invocan request API*/
+    
+    $APP= "api";
+}
+
+define("APP", ROOT.DS."api");
+define("CONTROLLERS", APP.DS."controllers");
+/* Bootstrat.php es lo primero que se ejecuta cuanfo ingreso a cualquier aplicacion*/
+define("BOOTSTRAP", APP.DS."Bootstrap.php");
+
+/**/
+set_include_path(VENDOR.PATH_SEPARATOR.  get_include_path());
+
+/* Ver donde me estoy ejecutando, si es local, stage o prod*/
+
+$app_env = getenv("APP_ENV");
+
+
+
+/* Si no tengo variable de entorno uso el server address*/
+$app_env = !empty($app_env)?$app_env:getenv("SERVER_ADDR");
+define("APPLICATION_ENV", $app_env);
+
+
+//die($app_env );
+$application = new Zend_Application(APPLICATION_ENV, array('config'=>APP.DS."config".DS."config.ini"));
+
+
+//Eejecuto el bootstrap de la aplicacion donde estoy parado
+$application->bootstrap()->run();
+
+
+
+?>
