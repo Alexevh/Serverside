@@ -30,6 +30,9 @@ $app_env = (!empty($app_env))?$app_env:getenv("SERVER_ADDR");
 define("APPLICATION_ENV", $app_env);
 //ultima version de zend 1, 1.12
 //creo una instancia de Application (api)
+
+
 $application = new Zend_Application(APPLICATION_ENV, array('config'=>APP.DS."config".DS."config.ini"));
+
 //ejecuto el bootstrap de la aplicacion
 $application->bootstrap()->run();

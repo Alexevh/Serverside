@@ -2,7 +2,15 @@
 
 class ProductoController extends Zend_Rest_Controller
 {
+    /* El index del REST nos lista los productos*/
     public function indexAction() {
+        
+        
+        /* Creo una instancia de la clase Config*/
+        $Config = new Zend_Config_Ini(APP.DS.'config'.DS."config.ini", APPLICATION_ENV);
+        
+        die(" El pasword es ".$Config->pwd);
+        
         
         die("Esty en el index del producto");
     }
@@ -20,7 +28,9 @@ class ProductoController extends Zend_Rest_Controller
           
     }
      public function getAction() {
-          die("Esty en el get del producto");
+         
+         $id = $this->getParam("id");
+          die("Esty en el get del producto id $id");
           
     }
     
