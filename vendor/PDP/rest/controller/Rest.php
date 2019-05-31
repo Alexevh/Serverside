@@ -4,7 +4,33 @@ namespace rest\controller;
 
 class Rest extends \Zend_Rest_Controller {
     
-        /* El index del REST nos lista los productos*/
+    
+    public function getHeader($name)
+    {
+        return $this->getRequest()->getHeader($name);
+    }
+    
+    public function error(\Exception $e)
+    {
+        $this->getResponse()->setHttpResponseCode($e->getCode());
+        $resultado = array("status"=>1, "Descripcion"=>$e->getMessage());
+        $resultado = \Zend_Json_Encoder::encode($resultado);
+        exit($this->getResponse()->appendBody($resultado));
+    }
+    
+    public function init()
+    {
+         $this->getResponse()->setHeader('Content-type', 'application/json');  
+    }
+    
+    public function getParam($name){
+        $raw = $this->getRequest()->getRawBody();       
+        $raw = \Zend_Json_Decoder::decode($raw); 
+        return  $raw[$name];
+    }
+
+
+    /* El index del REST nos lista los productos*/
     public function indexAction() {
            
         

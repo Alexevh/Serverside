@@ -41,25 +41,23 @@ class DeviceController extends Rest
     public function postAction() {
        
         /* Vamos a especificar que el tipo de contenido que devolvemos es JSON*/
-        $this->getResponse()->setHeader('Content-type', 'application/json');   
+        //$this->getResponse()->setHeader('Content-type', 'application/json');   
         
-        /* Recibo los parametros del cliente*/
-        $raw = $this->getRequest()->getRawBody();       
-        $raw = Zend_Json_Decoder::decode($raw);
-             
-        
+        try {
+            /* Recibo los parametros del cliente*/
+        //$raw = $this->getRequest()->getRawBody();       
+        //$raw = Zend_Json_Decoder::decode($raw); 
         /**/
-        $os = $raw['os'];
-        $status = $raw['status'];
+        $os = $this->getParam("os");
+        $status = $this->getParam("status");
         
         $os_validos = array("android", "ios");
         $estados_validos = array("activo", "inactivo");
         
         /* El UUID viene en el header*/
-        $uuid = $this->getRequest()->getHeader("uuid");
-        
-        
-        
+        //$uuid = $this->getRequest()->getHeader("uuid");
+        $uuid = $this->getHeader("uuid");
+          
         if (empty($uuid))
         {
           throw new Exception("Error, se requiere UUID", 409);
@@ -77,6 +75,12 @@ class DeviceController extends Rest
         
         echo("dar de alta producto $os , $status"); 
         exit();
+            
+        } catch (Exception $e)
+        {
+            $this->error($e);
+        }
+        
         
         
     }
