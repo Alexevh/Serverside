@@ -1,6 +1,8 @@
 <?php
 
-class ProductoController extends Zend_Rest_Controller
+use rest\controller\Rest;
+
+class DeviceController extends Rest
 {
     /* El index del REST nos lista los productos*/
     public function indexAction() {
@@ -8,10 +10,6 @@ class ProductoController extends Zend_Rest_Controller
         $this->getResponse()->setHeader('Content-type', 'application/json');   
         
        try {
-           
-           if (1==1){
-               throw new Exception("HUbo rror", 409);
-           }
            
                 
         /* Creo una instancia de la clase Config*/
@@ -42,38 +40,47 @@ class ProductoController extends Zend_Rest_Controller
     /* Vamos a recibir parametros para crear un producto*/
     public function postAction() {
        
+        /* Vamos a especificar que el tipo de contenido que devolvemos es JSON*/
+        $this->getResponse()->setHeader('Content-type', 'application/json');   
+        
         /* Recibo los parametros del cliente*/
         $raw = $this->getRequest()->getRawBody();       
         $raw = Zend_Json_Decoder::decode($raw);
+             
         
         /**/
-        $nombre = $raw['nombre'];
-        $precio = $raw['precio'];
+        $os = $raw['os'];
+        $status = $raw['status'];
         
-        echo("dar de alta producto $nombre , $precio");
+        $os_validos = array("android", "ios");
+        $estados_validos = array("activo", "inactivo");
+        
+        /* El UUID viene en el header*/
+        $uuid = $this->getRequest()->getHeader("uuid");
         
         
+        
+        if (empty($uuid))
+        {
+          throw new Exception("Error, se requiere UUID", 409);
+        }
+        
+        if (!in_array($os, $os_validos))
+        {
+          throw new Exception("Error, sistema operativo no soportado", 409);
+        }
+        
+         if (!in_array($status, $estados_validos))
+        {
+          throw new Exception("Error, status  no soportado", 409);
+        }
+        
+        echo("dar de alta producto $os , $status"); 
         exit();
+        
+        
     }
     
-    public function putAction() {
-          die("Esty en el putaction del producto");
-    }
     
-    public function deleteAction() {
-          die("Esty en el delete del producto");
-          
-    }
-     public function getAction() {
-         
-         $id = $this->getParam("id");
-          die("Esty en el get del producto id $id");
-          
-    }
-    
-     public function headAction() {
-          die("Esty en el head del producto");
-          
-    }
     
 }
