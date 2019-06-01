@@ -20,7 +20,8 @@ class Rest extends \Zend_Rest_Controller {
     
     public function init()
     {
-         $this->getResponse()->setHeader('Content-type', 'application/json');  
+        //die("entra al init "); 
+        $this->getResponse()->setHeader('Content-type', 'application/json');  
     }
     
     public function getParam($name){
@@ -46,7 +47,7 @@ class Rest extends \Zend_Rest_Controller {
        
         $this->getResponse()->setHttpResponseCode(404);
         $response = array("status"=>0, "descripcion"=>"No se puede poner");
-        $response = \Zend_Json::encode($response);
+        $response = \Zend_Json_Encoder::encode($response);
         exit($this->getResponse()->appendBody($response));
     }
     

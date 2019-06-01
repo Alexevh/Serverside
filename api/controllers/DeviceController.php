@@ -41,8 +41,8 @@ class DeviceController extends Rest
     public function postAction() {
        
         /* Vamos a especificar que el tipo de contenido que devolvemos es JSON*/
-        //$this->getResponse()->setHeader('Content-type', 'application/json');   
-        
+        $this->getResponse()->setHeader('Content-type', 'application/json');   
+        //die("post");
         try {
             /* Recibo los parametros del cliente*/
         //$raw = $this->getRequest()->getRawBody();       
