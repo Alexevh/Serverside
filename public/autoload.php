@@ -16,6 +16,7 @@ class Autoloader {
         $file_name = "";
         $name_space = "";
         $dir_name = "";
+         $class_name="";
         
         /*  Si existe el gion me da la posicion de la primera ocurrencia */
         if ($pos = strripos($class,"\\")) {
@@ -54,6 +55,7 @@ class Autoloader {
         $file_name = "";
         $name_space = "";
         $dir_name = "";
+         $class_name="";
 
         /*  Si existe el gion me da la posicion de la primera ocurrencia */
         if ($pos = strripos($class, "_")) {
@@ -73,6 +75,7 @@ class Autoloader {
         }
 
         $dir_name .=DS."$class_name.php";
+        //die($dir_name);
         
         $file_name = VENDOR.DS.$dir_name;
         //die($file_name);
@@ -89,6 +92,7 @@ class Autoloader {
         $file_name = "";
         $name_space = "";
         $dir_name = "";
+        $class_name="";
 
         /*  Si existe el gion me da la posicion de la primera ocurrencia */
         if ($pos = strripos($class, "\\")) {
