@@ -1,6 +1,7 @@
 <?php
 
 use rest\controller\Rest;
+use models\Device;
 
 class DeviceController extends Rest
 {
@@ -73,11 +74,19 @@ class DeviceController extends Rest
           throw new Exception("Error, status  no soportado", 409);
         }
         
-        echo("dar de alta producto $os , $status"); 
+        $Device = new Device();
+        $Device->os = $os;
+       $Device->status=$status;
+        $Device->uuid=$uuid;
+       $Device->create();
+        
+        
+        echo("Se dio de alta $os , $status"); 
         exit();
             
         } catch (Exception $e)
         {
+            die(ERR.$e->getMessage());
             $this->error($e);
         }
         
