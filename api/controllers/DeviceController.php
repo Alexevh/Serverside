@@ -2,6 +2,8 @@
 
 use rest\controller\Rest;
 use models\Device;
+use patterns\ServiceLocator;
+
 
 class DeviceController extends Rest {
     /* El index del REST nos lista los productos */
@@ -45,13 +47,18 @@ class DeviceController extends Rest {
 
             $os_validos = array("android", "ios");
             $estados_validos = array("activo", "inactivo");
+            
+            $lang = $this->lang;
+            //die($lang);
+            
+            $Translator = ServiceLocator::getTranslator($lang);
 
             /* El UUID viene en el header */
             //$uuid = $this->getRequest()->getHeader("uuid");
             $uuid = $this->getHeader("uuid");
 
             if (empty($uuid)) {
-                throw new Exception("Error, se requiere UUID", 409);
+                throw new Exception($Translator->_("invalid_uuid"), 409);
             }
 
             if (!in_array($os, $os_validos)) {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<tmx>
+<body>
+<tu tuid="invalid_uuid">
+    <tuv xml:lang="es">
+    <seg>Error se requiere UUID</seg>
+    </tuv>
+    <tuv xml:lang="en">
+    <seg>Error UUID needed</seg>
+    </tuv>
+</tu>
+</body>
+</tmx>

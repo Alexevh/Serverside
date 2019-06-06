@@ -23,6 +23,7 @@ class Rest extends \Zend_Rest_Controller {
     {
         //die("entra al init "); 
         $this->getResponse()->setHeader('Content-type', 'application/json');  
+        $this->lang = $lang = ($this->getHeader("lang"))?$this->getHeader("lang"):"es";
     }
     
     public function getParam($name){
