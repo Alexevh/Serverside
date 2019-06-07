@@ -74,12 +74,12 @@ class DeviceController extends Rest {
             $Device->status = $status;
             $Device->uuid = $uuid;
             $Device->create();
-
+            /* Ve rne el codigo del deocente redpsueta json*/
 
             echo("Se dio de alta $os , $status");
-            exit();
+            exit(); 
         } catch (Exception $e) {
-            die(ERR . $e->getMessage());
+            die($e->getMessage());
             $this->error($e);
         }
     }

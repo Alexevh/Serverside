@@ -12,7 +12,7 @@ class Rest extends \Zend_Rest_Controller {
     
     public function error(\Exception $e)
     {
-        die($e->getCode());
+        //die($e->getCode());
         $this->getResponse()->setHttpResponseCode($e->getCode());
         $resultado = array("status"=>1, "Descripcion"=>$e->getMessage());
         $resultado = \Zend_Json_Encoder::encode($resultado);
