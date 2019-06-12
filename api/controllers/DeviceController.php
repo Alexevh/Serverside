@@ -4,6 +4,9 @@ use rest\controller\Rest;
 use models\Device;
 use patterns\ServiceLocator;
 
+//Consultas
+use patterns\Query;
+use patterns\QAnd;
 
 class DeviceController extends Rest {
     /* El index del REST nos lista los productos */
@@ -14,13 +17,12 @@ class DeviceController extends Rest {
 
         try {
             /* Creo una instancia de la clase Config */
-            $Config = new Zend_Config_Ini(APP . DS . 'config' . DS . "config.ini", APPLICATION_ENV);      
+            $Config = new Zend_Config_Ini(APP . DS . 'config' . DS . "config.ini", APPLICATION_ENV);
             $Device = new Device();
             $this->getResponse()->setHttpResponseCode(200);
-            $data = array("status"=>0, "DESCRIPCION"=>$Device->obtenerTodo());
+            $data = array("status" => 0, "DESCRIPCION" => $Device->obtenerTodo());
             $data = \Zend_Json::encode($data);
             exit($this->getResponse()->appendBody($data));
-             
         } catch (exception $e) {
             $this->getResponse()->setHttpResponseCode($e->getCode());
             $resultado["status"] = 1;
@@ -42,15 +44,15 @@ class DeviceController extends Rest {
             //$raw = $this->getRequest()->getRawBody();       
             //$raw = Zend_Json_Decoder::decode($raw); 
             /**/
-            $os = $this->getParam("os");
-            $status = $this->getParam("status");
+            $os = $this->getRawParam("os");
+            $status = $this->getRawParam("status");
 
             $os_validos = array("android", "ios");
             $estados_validos = array("activo", "inactivo");
-            
+
             $lang = $this->lang;
             //die($lang);
-            
+
             $Translator = ServiceLocator::getTranslator($lang);
 
             /* El UUID viene en el header */
@@ -74,12 +76,89 @@ class DeviceController extends Rest {
             $Device->status = $status;
             $Device->uuid = $uuid;
             $Device->create();
-            /* Ve rne el codigo del deocente redpsueta json*/
+            /* Ve rne el codigo del deocente redpsueta json */
 
             echo("Se dio de alta $os , $status");
-            exit(); 
+            exit();
         } catch (Exception $e) {
             die($e->getMessage());
+            $this->error($e);
+        }
+    }
+
+    public function deleteAction() {
+        /* Vamos a especificar que el tipo de contenido que devolvemos es JSON */
+        $this->getResponse()->setHeader('Content-type', 'application/json');
+
+        try {
+
+            $lang = $this->lang;
+            $Translator = ServiceLocator::getTranslator($lang);
+
+
+            $id = $this->getParam("id");
+            //die("me llego ".$id);
+            if (empty($id)) {
+                throw new \Exception($Translator->_("invalid_id", 409));
+            }
+
+            $Device = new Device();
+            
+            /* Cargo la query*/
+            $Q = new Query($Device);
+            $Q->add(new QAnd("id", $id));
+            
+            /* Esto carga el device por el ID valido de la BD, el id lo tiene*/
+            if (!$Device->load($Q))
+            {
+                throw new \Exception("Status no valido");
+            }
+            $Device->id = $id;
+            //die("me llego ".$id);
+            $Device->delete();
+
+            $respuesta = array("status" => 0, "descripcion" => array());
+
+
+            $this->response($respuesta, 209);
+        } catch (Exception $e) {
+            $this->error($e);
+        }
+    }
+
+    public function putAction() {
+        /* Vamos a especificar que el tipo de contenido que devolvemos es JSON */
+        $this->getResponse()->setHeader('Content-type', 'application/json');
+        
+        try {
+            $os = $this->getRawParam("os");
+            $status = $this->getRawParam("status");
+            $uuid = $this->getHeader("uuid");
+             $id = $this->getRawParam("id");
+             
+            $Device = new Device();
+            
+            /* Cargo la query*/
+            $Q = new Query($Device);
+            $Q->add(new QAnd("id", $id));
+            
+            /* Esto carga el device por el ID valido de la BD, el id lo tiene*/
+            if (!$Device->load($Q))
+            {
+                throw new \Exception("Status no valido");
+            }
+            
+            $Device->os = $os;
+            $Device->status = $status;
+            $Device->uuid = $uuid;
+            $Device->id=$id;
+            $Device->updated = Date("Y-m-m h:m:s");
+            $Device->update();
+            $respuesta = array("status" => 0, "descripcion" => array());
+
+
+            $this->response($respuesta, 209);
+        } catch (Exception $e) {
             $this->error($e);
         }
     }

@@ -26,7 +26,7 @@ class Rest extends \Zend_Rest_Controller {
         $this->lang = $lang = ($this->getHeader("lang"))?$this->getHeader("lang"):"es";
     }
     
-    public function getParam($name){
+    public function getRawParam($name){
         $raw = $this->getRequest()->getRawBody();       
         $raw = \Zend_Json_Decoder::decode($raw); 
         return  $raw[$name];
@@ -68,5 +68,15 @@ class Rest extends \Zend_Rest_Controller {
      public function headAction() {
           die("Esty en el head del controlador por defecto");
           
+    }
+    
+    public function response($response, $httpcode)
+    {
+        //$CODIGO = $httpcode;
+        //die("me llego el cod".$httpcode);
+        $this->getResponse()->setHttpResponseCode($httpcode);   
+        $respuesta = \Zend_Json::encode($response);
+        exit($this->getResponse()->appendBody($respuesta));
+        
     }
 }
