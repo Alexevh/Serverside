@@ -3,9 +3,6 @@
 namespace patterns\strategy;
 
 abstract class QueryAbstract{
-    
-    public function preparar($Q, $pos=0);
-    
-    
+	
+	public abstract function preparar($Q, $pos = 0);
 }
-

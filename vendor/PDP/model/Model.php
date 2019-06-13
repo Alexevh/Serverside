@@ -62,4 +62,8 @@ class Model {
             $this->create();
         }
     }
+    
+    public function load($Q){
+		return $this->Dao->load($this, $Q);
+	}
 }

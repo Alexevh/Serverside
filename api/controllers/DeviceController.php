@@ -5,8 +5,9 @@ use models\Device;
 use patterns\ServiceLocator;
 
 //Consultas
-use patterns\Query;
-use patterns\QAnd;
+use patterns\strategy\Query;
+use patterns\strategy\QAnd;
+use patterns\strategy\QueryAbstract;
 
 class DeviceController extends Rest {
     /* El index del REST nos lista los productos */
