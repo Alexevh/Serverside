@@ -28,7 +28,9 @@ class DataAccess extends \Zend_Db_Adapter_Mysqli{
     
     public function retrieve($sql, $binds){
         $Dar = new DataAccessResult($this, $sql);
+        //die(print_r($binds));
         $Dar->_execute($binds);
+        //die("llegue acaj");
         return $Dar;
     }
     

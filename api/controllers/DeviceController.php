@@ -6,31 +6,36 @@ use patterns\ServiceLocator;
 
 //Consultas
 use patterns\strategy\Query;
-use patterns\strategy\QAnd;
+use patterns\strategy\Qand;
 use patterns\strategy\QueryAbstract;
+use patterns\strategy\QLike;
 
 class DeviceController extends Rest {
     /* El index del REST nos lista los productos */
 
     public function indexAction() {
-        /* Vamos a especificar que el tipo de contenido que devolvemos es JSON */
-        $this->getResponse()->setHeader('Content-type', 'application/json');
-
-        try {
-            /* Creo una instancia de la clase Config */
-            $Config = new Zend_Config_Ini(APP . DS . 'config' . DS . "config.ini", APPLICATION_ENV);
-            $Device = new Device();
-            $this->getResponse()->setHttpResponseCode(200);
-            $data = array("status" => 0, "DESCRIPCION" => $Device->obtenerTodo());
-            $data = \Zend_Json::encode($data);
-            exit($this->getResponse()->appendBody($data));
-        } catch (exception $e) {
-            $this->getResponse()->setHttpResponseCode($e->getCode());
-            $resultado["status"] = 1;
-            $resultado["descripcion"] = $e->getMessage();
-            $resultado = Zend_Json::encode($resultado);
-            exit($this->getResponse()->appendBody($resultado));
+        
+        
+        $modelo = $this->getParam("modelo");
+        $Device = new Device();
+        //$RESULTADO = $Device->hola();
+        
+        if (!empty($modelo))
+        {
+            $Q = new Query($Device);
+            $Q->add(new QLike("modelo", $modelo));
+      
         }
+         /* Vamos a especificar que el tipo de contenido que devolvemos es JSON */
+        $this->getResponse()->setHeader('Content-type', 'application/json');
+        // $respuesta = array("status"=>0, "descripcion"=>$Device->fetch($Q));
+        //die(print_r($Device->hola()));
+         $respuesta = array("status"=>0, "descripcion"=>$Device->obtenerISHIT());
+         $this->response($respuesta, 200);
+        
+        
+       
+
     }
 
     /* Vamos a recibir parametros para crear un producto */
@@ -159,6 +164,44 @@ class DeviceController extends Rest {
 
 
             $this->response($respuesta, 209);
+        } catch (Exception $e) {
+            $this->error($e);
+        }
+    }
+    
+    public function getAction() {
+       
+           /* Vamos a especificar que el tipo de contenido que devolvemos es JSON */
+        $this->getResponse()->setHeader('Content-type', 'application/json');
+
+        try {
+
+            $lang = $this->lang;
+            $Translator = ServiceLocator::getTranslator($lang);
+
+
+            $id = $this->getParam("id");
+            //die("me llego ".$id);
+            if (empty($id)) {
+                throw new \Exception($Translator->_("invalid_id", 409));
+            }
+
+            $Device = new Device();
+            
+            /* Cargo la query*/
+            $Q = new Query($Device);
+            $Q->add(new QAnd("id", $id));
+            
+            /* Esto carga el device por el ID valido de la BD, el id lo tiene*/
+            if (!$Device->load($Q))
+            {
+                throw new \Exception("Status no valido");
+            }
+            
+            $respuesta = array("status" => 0, "descripcion" => $Device->toArray());
+
+
+            $this->response($respuesta, 200);
         } catch (Exception $e) {
             $this->error($e);
         }

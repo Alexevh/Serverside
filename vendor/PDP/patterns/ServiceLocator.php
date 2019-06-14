@@ -1,6 +1,7 @@
 <?php
 
 namespace patterns;
+use dao\Dao;
 
 class ServiceLocator {
 
@@ -28,6 +29,28 @@ class ServiceLocator {
         }
 
         return $Config;
+    }
+    
+    
+    public static function getDAO($Model)
+    {
+        $reflect = new \ReflectionClass($Model);
+        $modelo = $reflect->getShortName();
+        $archivo = PROJECT.DS."daos".DS."$modelo.php";
+        
+        if (file_exists($archivo))
+        {
+            $Dao = "daos\\$modelo";
+            //die("llegue aca".$Dao);
+            $Dao = new $Dao();
+            
+        } else 
+        {
+            $Dao = new Dao();
+           // die("llegue aca fuk");
+        }
+        
+        return $Dao;
     }
 
 }
