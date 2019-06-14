@@ -6,7 +6,7 @@ use patterns\ServiceLocator;
 
 //Consultas
 use patterns\strategy\Query;
-use patterns\strategy\Qand;
+use patterns\strategy\QAnd;
 use patterns\strategy\QueryAbstract;
 use patterns\strategy\QLike;
 
@@ -30,7 +30,7 @@ class DeviceController extends Rest {
         $this->getResponse()->setHeader('Content-type', 'application/json');
         // $respuesta = array("status"=>0, "descripcion"=>$Device->fetch($Q));
         //die(print_r($Device->hola()));
-         $respuesta = array("status"=>0, "descripcion"=>$Device->obtenerISHIT());
+         $respuesta = array("status"=>0, "descripcion"=>$Device->consulta("ISH"));
          $this->response($respuesta, 200);
         
         
@@ -190,7 +190,7 @@ class DeviceController extends Rest {
             
             /* Cargo la query*/
             $Q = new Query($Device);
-            $Q->add(new QAnd("id", $id));
+            $Q->add(new Qand("id", $id));
             
             /* Esto carga el device por el ID valido de la BD, el id lo tiene*/
             if (!$Device->load($Q))

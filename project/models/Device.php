@@ -73,5 +73,9 @@ class Device extends Model {
     public function obtenerISHIT() {
        return  $this->Dao->obtenerISHIT();
     }
+    
+    public function consulta($Modelo) {
+       return  $this->Dao->consulta($Modelo);
+    }
 
 }

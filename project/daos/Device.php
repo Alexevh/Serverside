@@ -18,9 +18,9 @@ class Device extends Dao {
     public $modelo = null;
     public $cliente = null;
 
-    
     /* Este metodo por ejenplo es propio de este DAO, como bien podria ser obtener
-las peliculas mas vistas del a;o     */
+      las peliculas mas vistas del a;o */
+
     public function obtenerISHIT() {
         //die("LCDLL");
         $Config = new \Zend_Config_Ini(APP . DS . 'config' . DS . "config.ini", APPLICATION_ENV);
@@ -31,7 +31,7 @@ las peliculas mas vistas del a;o     */
         $sql = " SELECT device.*, cliente.nombre, cliente.apellido
 FROM device
 LEFT JOIN cliente ON cliente.id = device.cliente
-WHERE modelo LIKE '%IS%' ";
+WHERE modelo LIKE %IS%";
         /* El objeto que resulto de la consulta */
         $Statement = new \Zend_Db_Statement_Mysqli($adapter, $sql);
         /* Ejecuto el resultado */
@@ -45,6 +45,18 @@ WHERE modelo LIKE '%IS%' ";
         } else {
             throw new \Exception("no hay datos");
         }
+    }
+
+    public function consulta($modelo) {
+        $sql = " SELECT device.*, cliente.nombre, cliente.apellido
+FROM device
+LEFT JOIN cliente ON cliente.id = device.cliente
+WHERE modelo LIKE ? ";
+        $binds = array("%$modelo%");
+        //die($sql);
+        return $this->DataAccess->retrieve($sql, $binds)->fetchAll();
+        
+        
     }
 
 }
